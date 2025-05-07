@@ -1,4 +1,4 @@
-// app/javascript/controllers/application.js
+// app/javascript/stimulus.js
 
 import { Application } from "@hotwired/stimulus"
 
