@@ -1,0 +1,55 @@
+<%= form_with(model: project, class: "contents") do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+      <ul class="list-disc ml-6">
+        <% project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Project Fields -->
+  <div class="my-5">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:title].none?, "border-red-400 focus:outline-red-600": project.errors[:title].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :subtitle %>
+    <%= form.text_field :subtitle, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:subtitle].none?, "border-red-400 focus:outline-red-600": project.errors[:subtitle].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :description %>
+    <%= form.text_area :description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:description].none?, "border-red-400 focus:outline-red-600": project.errors[:description].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :goal %>
+    <%= form.number_field :goal, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:goal].none?, "border-red-400 focus:outline-red-600": project.errors[:goal].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :deadline %>
+    <%= form.date_field :deadline, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:deadline].none?, "border-red-400 focus:outline-red-600": project.errors[:deadline].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :category %>
+    <%= form.text_field :category, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:category].none?, "border-red-400 focus:outline-red-600": project.errors[:category].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :location %>
+    <%= form.text_field :location, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:location].none?, "border-red-400 focus:outline-red-600": project.errors[:location].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :image %>
+    <%= form.file_field :image, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": project.errors[:image].none?, "border-red-400 focus:outline-red-600": project.errors[:image].any?}] %>
+  </div>
+
+  <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+<% end %>

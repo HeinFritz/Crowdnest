@@ -1,0 +1,12 @@
+{
+  "imports": {
+    "application": "/assets/application-7f3f9c19.js",
+    "@hotwired/turbo-rails": "/assets/turbo.min-1262d735.js",
+    "@hotwired/stimulus": "/assets/stimulus-d59b3b7f.js",
+    "@hotwired/stimulus-loading": "/assets/stimulus-loading-1fc53fe7.js",
+    "controllers/add_reward_controller": "/assets/controllers/add_reward_controller-ff58868a.js",
+    "@rails/ujs": "/assets/@rails--ujs-69e21124.js",
+    "controllers/hello_controller": "/assets/controllers/hello_controller-708796bd.js",
+    "controllers": "/assets/controllers/index-d8f2ebe6.js"
+  }
+}

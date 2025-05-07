@@ -1,0 +1,21 @@
+<%= form_with model: @project, url: step2_project_steps_path, method: :post, local: true do |form| %>
+  <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Funding & Deadline</h2>
+
+    <!-- Funding Goal -->
+    <div class="mb-6">
+      <%= form.label :goal, "Funding Goal ($)", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.number_field :goal, step: 0.01, class: "mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Deadline -->
+    <div class="mb-6">
+      <%= form.label :deadline, "Deadline", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.date_field :deadline, class: "mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+    </div>
+
+    <div class="flex justify-end">
+      <%= form.submit "Next: Step 3", class: "bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    </div>
+  </div>
+<% end %>

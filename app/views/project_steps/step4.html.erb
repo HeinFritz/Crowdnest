@@ -1,0 +1,27 @@
+<%= form_with model: @project, url: step4_submit_project_steps_path, local: true, html: { data: { controller: "add-reward" } } do |f| %>
+  <h2 class="text-2xl font-bold mb-8 text-center">🏆 Set Up Your Reward Tiers</h2>
+
+  <!-- Existing Rewards -->
+  <div data-add-reward-target="container">
+    <%= f.fields_for :rewards do |reward_fields| %>
+      <%= render "reward_fields", f: reward_fields %>
+    <% end %>
+  </div>
+
+  <!-- Template for New Rewards -->
+  <template data-add-reward-target="template">
+    <%= f.fields_for :rewards, Reward.new, child_index: "NEW_RECORD" do |reward_fields| %>
+      <%= render "reward_fields", f: reward_fields %>
+    <% end %>
+  </template>
+
+  <!-- Add Another Reward Button -->
+  <div class="text-center">
+    <%= link_to "➕ Add Another Reward", "#", data: { action: "click->add-reward#addReward" }, class: "text-white bg-green-500 hover:bg-green-600 font-semibold py-2 px-6 rounded-lg inline-block mt-6" %>
+  </div>
+
+  <!-- Save and Continue Button -->
+  <div class="mt-10 text-center">
+    <%= f.submit "Save and Continue", class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg" %>
+  </div>
+<% end %>

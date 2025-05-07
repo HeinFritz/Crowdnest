@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  subtitle: MyString
+  description: MyText
+  goal: 1
+  deadline: 2025-04-23
+  category: MyString
+  location: MyString
+  image: MyString
+  creator: one
+
+two:
+  title: MyString
+  subtitle: MyString
+  description: MyText
+  goal: 1
+  deadline: 2025-04-23
+  category: MyString
+  location: MyString
+  image: MyString
+  creator: two

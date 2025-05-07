@@ -1,0 +1,30 @@
+<div class="reward-tier p-6 border rounded-2xl mb-6 shadow-sm bg-white">
+  <div class="grid gap-4">
+    <div>
+      <%= f.label :name, "Reward Name", class: "block text-sm font-semibold text-gray-700" %>
+      <%= f.text_field :name, class: "mt-1 p-2 w-full border rounded-lg" %>
+    </div>
+
+    <div>
+      <%= f.label :amount, "Pledge Amount ($)", class: "block text-sm font-semibold text-gray-700" %>
+      <%= f.number_field :amount, step: "0.01", class: "mt-1 p-2 w-full border rounded-lg" %>
+    </div>
+
+    <div>
+      <%= f.label :description, "Description", class: "block text-sm font-semibold text-gray-700" %>
+      <%= f.text_area :description, rows: 3, class: "mt-1 p-2 w-full border rounded-lg" %>
+    </div>
+
+    <div>
+      <%= f.label :delivery_date, "Delivery Date", class: "block text-sm font-semibold text-gray-700" %>
+      <%= f.date_select :delivery_date, {}, class: "mt-1 p-2 w-full border rounded-lg" %>
+    </div>
+
+    <div>
+      <%= f.label :image, "Reward Image", class: "block text-sm font-semibold text-gray-700" %>
+      <%= f.file_field :image, class: "mt-1" %>
+    </div>
+
+    <%= link_to "🗑️ Remove Reward", "#", data: { action: "click->add-reward#removeReward" }, class: "text-red-500 font-semibold mt-4 block text-center" %>
+  </div>
+</div>
