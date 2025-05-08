@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_25_233023) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_08_045837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_233023) do
     t.index ["reset_password_token"], name: "index_creators_on_reset_password_token", unique: true
   end
 
+  create_table "pledges", force: :cascade do |t|
+    t.bigint "backer_id", null: false
+    t.bigint "project_id", null: false
+    t.bigint "reward_id"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["backer_id"], name: "index_pledges_on_backer_id"
+    t.index ["project_id"], name: "index_pledges_on_project_id"
+    t.index ["reward_id"], name: "index_pledges_on_reward_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "title"
     t.string "subtitle"
@@ -96,6 +108,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_233023) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "pledges", "backers"
+  add_foreign_key "pledges", "projects"
+  add_foreign_key "pledges", "rewards"
   add_foreign_key "projects", "creators"
   add_foreign_key "rewards", "projects"
 end

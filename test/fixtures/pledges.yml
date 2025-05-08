@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  backer: one
+  project: one
+  reward: one
+  amount: 1
+
+two:
+  backer: two
+  project: two
+  reward: two
+  amount: 1

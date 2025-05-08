@@ -29,6 +29,22 @@
     </div>
   </div>
 
+        <% total = @project.pledges.sum(:amount) %>
+
+    <!-- Progress Bar: put this right under your project details section -->
+    <div class="mt-6">
+      <div class="w-full bg-gray-200 rounded-full h-4">
+        <div
+          class="bg-green-600 h-4 rounded-full"
+          style="width: <%= (total.to_f / @project.goal * 100).clamp(0,100) %>%;">
+        </div>
+      </div>
+      <p class="text-sm text-gray-600 mt-1">
+        <%= number_to_currency(total) %> raised of <%= number_to_currency(@project.goal) %>
+      </p>
+    </div>
+
+
     <!-- Reward Tiers -->
   <% if @project.rewards.present? %>
     <div class="mt-10">
@@ -51,6 +67,52 @@
       </div>
     </div>
   <% end %>
+
+    
+
+      <!-- Pledge Form or Login Prompt -->
+<div class="mt-8">
+  <% if backer_signed_in? %>
+    <div class="border p-6 rounded-lg bg-green-50" data-controller="pledge-form">
+      <h2 class="text-xl font-semibold mb-4">Support This Project</h2>
+
+      <%= form_with url: project_pledges_path(@project), model: Pledge.new, scope: :pledge, local: true do |f| %>
+        <div class="mb-3">
+          <%= f.label :amount %>
+          <%= f.number_field :amount,
+                data: { "pledge-form-target": "amount" },
+                class: "w-full border px-2 py-1 rounded" %>
+        </div>
+
+        <% if @project.rewards.any? %>
+          <div class="mb-3">
+            <%= f.label :reward_id, "Choose a reward tier" %>
+            <%= f.select :reward_id,
+                  options_for_select(
+                    @project.rewards.map { |r|
+                      ["#{r.name} — $#{r.amount}", r.id, { 'data-amount': r.amount }]
+                    }
+                  ),
+                  include_blank: "No reward",
+                  data: { "pledge-form-target": "select" },
+                  class: "w-full border px-2 py-1 rounded" %>
+          </div>
+         
+        <% end %>
+
+        <%= f.submit "Back This Project", class: "bg-green-600 text-white px-4 py-2 rounded" %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center">
+      <%= link_to "Back This Project", new_backer_session_path,
+            class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
+      <p class="mt-2 text-sm text-gray-600">
+        You must be logged in as a backer to support a project.
+      </p>
+    </div>
+  <% end %>
+</div>
 
 
   <!-- Action buttons -->

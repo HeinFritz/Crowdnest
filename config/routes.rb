@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
-  resources :projects do
-    member do
-      patch "submit"  # This creates the submit_project_path helper
-    end
+  resources :projects, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
+    member { patch :submit }
+    resources :pledges, only: [ :create ]
   end
 
   devise_for :backers, controllers: {
