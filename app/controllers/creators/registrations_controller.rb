@@ -9,6 +9,6 @@ class Creators::RegistrationsController < Devise::RegistrationsController
   end
 
   def after_sign_up_path_for(resource)
-    new_project_path # this sends the user to the project creation form
+    root_path # this sends the user to the project creation form
   end
 end

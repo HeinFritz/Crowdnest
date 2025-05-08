@@ -7,6 +7,17 @@
     </div>
   <% end %>
 
+  <!-- Debugging: Show if creator is logged in -->
+  <% if creator_signed_in? %>
+    <p>You are logged in as a creator: <%= current_creator.email %></p>
+  <% else %>
+    <p>You are not logged in as a creator.</p>
+  <% end %>
+
+  <!-- Debugging: Show Project Creator and Current Creator -->
+  <p>Project Creator ID: <%= @project.creator_id %></p>
+  <p>Current Creator ID: <%= current_creator&.id %></p>
+
   <!-- Main card box -->
   <div class="bg-white shadow-lg rounded-xl p-8 flex flex-col sm:flex-row gap-8">
     <% if @project.image.attached? %>
@@ -29,23 +40,21 @@
     </div>
   </div>
 
-        <% total = @project.pledges.sum(:amount) %>
+  <% total = @project.pledges.sum(:amount) %>
 
-    <!-- Progress Bar: put this right under your project details section -->
-    <div class="mt-6">
-      <div class="w-full bg-gray-200 rounded-full h-4">
-        <div
-          class="bg-green-600 h-4 rounded-full"
-          style="width: <%= (total.to_f / @project.goal * 100).clamp(0,100) %>%;">
-        </div>
+  <!-- Progress Bar -->
+  <div class="mt-6">
+    <div class="w-full bg-gray-200 rounded-full h-4">
+      <div class="bg-green-600 h-4 rounded-full"
+        style="width: <%= (total.to_f / @project.goal * 100).clamp(0,100) %>%;">
       </div>
-      <p class="text-sm text-gray-600 mt-1">
-        <%= number_to_currency(total) %> raised of <%= number_to_currency(@project.goal) %>
-      </p>
     </div>
+    <p class="text-sm text-gray-600 mt-1">
+      <%= number_to_currency(total) %> raised of <%= number_to_currency(@project.goal) %>
+    </p>
+  </div>
 
-
-    <!-- Reward Tiers -->
+  <!-- Reward Tiers -->
   <% if @project.rewards.present? %>
     <div class="mt-10">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">🏆 Reward Tiers</h2>
@@ -68,58 +77,57 @@
     </div>
   <% end %>
 
-    
+  <!-- Pledge Form or Login Prompt -->
+  <div class="mt-8">
+    <% if backer_signed_in? %>
+      <div class="border p-6 rounded-lg bg-green-50" data-controller="pledge-form">
+        <h2 class="text-xl font-semibold mb-4">Support This Project</h2>
 
-      <!-- Pledge Form or Login Prompt -->
-<div class="mt-8">
-  <% if backer_signed_in? %>
-    <div class="border p-6 rounded-lg bg-green-50" data-controller="pledge-form">
-      <h2 class="text-xl font-semibold mb-4">Support This Project</h2>
-
-      <%= form_with url: project_pledges_path(@project), model: Pledge.new, scope: :pledge, local: true do |f| %>
-        <div class="mb-3">
-          <%= f.label :amount %>
-          <%= f.number_field :amount,
-                data: { "pledge-form-target": "amount" },
-                class: "w-full border px-2 py-1 rounded" %>
-        </div>
-
-        <% if @project.rewards.any? %>
+        <%= form_with url: project_pledges_path(@project), model: Pledge.new, scope: :pledge, local: true do |f| %>
           <div class="mb-3">
-            <%= f.label :reward_id, "Choose a reward tier" %>
-            <%= f.select :reward_id,
-                  options_for_select(
-                    @project.rewards.map { |r|
-                      ["#{r.name} — $#{r.amount}", r.id, { 'data-amount': r.amount }]
-                    }
-                  ),
-                  include_blank: "No reward",
-                  data: { "pledge-form-target": "select" },
+            <%= f.label :amount %>
+            <%= f.number_field :amount,
+                  data: { "pledge-form-target": "amount" },
                   class: "w-full border px-2 py-1 rounded" %>
           </div>
-         
+
+          <% if @project.rewards.any? %>
+            <div class="mb-3">
+              <%= f.label :reward_id, "Choose a reward tier" %>
+              <%= f.select :reward_id,
+                    options_for_select(
+                      @project.rewards.map { |r| ["#{r.name} — $#{r.amount}", r.id, { 'data-amount': r.amount }] }
+                    ),
+                    include_blank: "No reward",
+                    data: { "pledge-form-target": "select" },
+                    class: "w-full border px-2 py-1 rounded" %>
+            </div>
+          <% end %>
+
+          <%= f.submit "Back This Project", class: "bg-green-600 text-white px-4 py-2 rounded" %>
         <% end %>
-
-        <%= f.submit "Back This Project", class: "bg-green-600 text-white px-4 py-2 rounded" %>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="text-center">
-      <%= link_to "Back This Project", new_backer_session_path,
-            class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
-      <p class="mt-2 text-sm text-gray-600">
-        You must be logged in as a backer to support a project.
-      </p>
-    </div>
-  <% end %>
-</div>
-
+      </div>
+    <% else %>
+      <div class="text-center">
+        <%= link_to "Back This Project", new_backer_session_path,
+              class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
+        <p class="mt-2 text-sm text-gray-600">
+          You must be logged in as a backer to support a project.
+        </p>
+      </div>
+    <% end %>
+  </div>
 
   <!-- Action buttons -->
-  <div class="mt-6 flex flex-wrap gap-3">
-    <%= link_to "Edit Project", edit_project_path(@project), class: "bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-md" %>
+    <div class="mt-6 flex flex-wrap gap-3">
     <%= link_to "Back to Projects", root_path, class: "bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-4 rounded-md" %>
-    <%= button_to "Delete Project", @project, method: :delete, data: { turbo_confirm: "Are you sure?" },
-        class: "bg-red-600 hover:bg-red-500 text-white font-medium py-2 px-4 rounded-md" %>
+    
+    <% if creator_signed_in? && current_creator == @project.creator %>
+      <div class="flex flex-wrap gap-3">
+        <%= link_to "Edit Project", edit_project_path(@project), class: "bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-md" %>
+        <%= button_to "Delete Project", @project, method: :delete, data: { turbo_confirm: "Are you sure?" },
+            class: "bg-red-600 hover:bg-red-500 text-white font-medium py-2 px-4 rounded-md" %>
+      </div>
+    <% end %>
   </div>
 </div>

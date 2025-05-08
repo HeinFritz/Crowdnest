@@ -1,8 +1,9 @@
-# app/controllers/projects_controller.rb
 class ProjectsController < ApplicationController
   # Allow public access to index and show; restrict other actions to creators
   before_action :authenticate_creator!, except: [ :index, :show ]
   before_action :set_project, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_creator!, only: [ :edit, :update, :destroy ]
+
 
   # GET /projects
   def index
@@ -11,7 +12,7 @@ class ProjectsController < ApplicationController
 
   # GET /projects/:id
   def show
-    # Publicly viewable, including signed-in backers
+    @project = Project.find(params[:id])
   end
 
   # GET /projects/new
@@ -32,7 +33,10 @@ class ProjectsController < ApplicationController
 
   # GET /projects/:id/edit
   def edit
+    # @project is already set and authorized
   end
+
+
 
   # PATCH/PUT /projects/:id
   def update
@@ -46,13 +50,27 @@ class ProjectsController < ApplicationController
   # DELETE /projects/:id
   def destroy
     @project.destroy
-    redirect_to projects_path, notice: "Project successfully deleted."
+    redirect_to root_path, notice: "Project successfully deleted."
   end
 
   private
 
+  def authorize_creator!
+    if current_creator.nil?
+      # Debugging Log for missing current_creator
+      Rails.logger.debug "Current Creator is nil!"
+      redirect_to root_path, alert: "You need to be logged in to edit or delete this project."
+    elsif current_creator != @project.creator
+      # Debugging Log for mismatch in creator
+      Rails.logger.debug "Current Creator (#{current_creator.id}) does not match Project Creator (#{@project.creator_id})"
+      redirect_to root_path, alert: "You are not authorized to modify this project."
+    else
+      # Debugging Log for correct authorization
+      Rails.logger.debug "Current Creator (#{current_creator.id}) is authorized for this project."
+    end
+  end
+
   def set_project
-    # Use unscoped find so backers can view the project
     @project = Project.find(params[:id])
   end
 

@@ -1,6 +1,12 @@
+# app/controllers/pages_controller.rb
 class PagesController < ApplicationController
   def home
-    # @projects = Project.all.order(created_at: :desc)
-    @projects = Project.where(launched: true)  # Fetch launched projects only
+    if params[:query].present?
+      @projects = Project.where("title ILIKE ?", "%#{params[:query]}%")
+    elsif params[:category].present?
+      @projects = Project.where(category: params[:category])
+    else
+      @projects = Project.all
+    end
   end
 end

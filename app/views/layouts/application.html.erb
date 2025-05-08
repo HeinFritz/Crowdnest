@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Crowdnest" %></title>
+    <title><%= content_for(:title) || "CrowdNest" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -21,14 +21,18 @@
   </head>
 
   <body class="bg-gray-50">
-    <!-- Main Navigation -->
+    <!-- Main Navigation (This appears on every page) -->
     <header class="bg-white shadow-md">
       <div class="container mx-auto flex items-center justify-between px-6 py-4">
-        <div class="text-2xl font-bold text-green-600">CrowdNest</div>
-        <nav class="flex items-center space-x-4">
-          <%= link_to "Home", root_path, class: "text-gray-700 hover:text-green-600" %>
-          <%# Additional links can go here %>
-        </nav>
+        <%= link_to "CrowdNest", root_path, class: "text-2xl font-bold text-green-600" %>
+         
+        <!-- Search Bar -->
+        <div class="flex-1 mx-6 hidden lg:block">
+          <%= form_with url: root_path, method: :get, local: true, class: "flex" do %>
+            <%= text_field_tag :query, params[:query], placeholder: "Search projects...", class: "w-full px-4 py-2 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-500" %>
+            <%= submit_tag "Search", class: "px-4 py-2 bg-green-500 text-white rounded-r-full hover:bg-green-600" %>
+          <% end %>
+        </div>
         <div class="flex items-center space-x-4">
           <% if creator_signed_in? %>
             <span class="text-gray-700">Hello, <%= current_creator.email %></span>
@@ -44,6 +48,13 @@
           <% end %>
         </div>
       </div>
+
+      <!-- Category navbar -->
+      <div class="flex justify-center bg-green-100 py-3 shadow-sm space-x-6 text-green-800 font-medium text-sm">
+        <% ["Art", "Tech", "Music", "Book", "Food", "Journalism", "Handmade", "Game", "Film", "Publishing"].each do |category| %>
+          <%= link_to category, root_path(category: category), class: "hover:underline" %>
+        <% end %>
+      </div>
     </header>
 
     <!-- Alerts -->
@@ -55,5 +66,31 @@
     <main class="container mx-auto px-6 py-6">
       <%= yield %>
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 text-white mt-16">
+      <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold">CrowdNest</h3>
+          <p class="mt-2 text-sm text-green-200">Empowering ideas through community support.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2">Follow Us</h4>
+          <ul class="flex space-x-4">
+            <!-- Social icons here -->
+            <li><%= link_to "https://twitter.com", target: "_blank", rel: "noopener" do %>
+              <!-- SVG icon -->
+            <% end %></li>
+            <!-- repeat for other platforms -->
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-2">Contact</h4>
+          <p class="text-sm text-green-200">Email: support@crowdnest.com</p>
+          <p class="text-sm text-green-200">© <%= Time.current.year %> CrowdNest. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
   </body>
 </html>
